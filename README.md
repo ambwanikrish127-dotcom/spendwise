@@ -1,54 +1,61 @@
-# 💰 SpendWise — Expense Tracker
+# 💰 SpendWise — Premium React Expense Tracker
 
-A clean, responsive personal finance tracker built with pure HTML, CSS, and JavaScript. No frameworks, no dependencies — just open and use!
+A modern, fast, and responsive personal finance tracker rebuilt with **React 18** and **Vite**.
 
 ## ✨ Features
 
-- **Dashboard** — Total income, expenses, and balance at a glance
-- **Transactions** — Add, edit, delete transactions with full details
-- **Type Filter Pills** — Quickly filter by All / Income / Expense
-- **Search & Filters** — Filter by category, date range, or keyword
-- **CSV Export** — Download your filtered transactions as a CSV file
-- **Reports** — Date range analysis, monthly breakdown table, spending by category bars
-- **Persistent Storage** — Data saved in browser's localStorage
-- **Responsive** — Works on mobile and desktop
+- **Dashboard View** — Total income, expenses, and net balance (auto-adjusts color based on profit/loss) along with a quick-glance list of the 5 most recent transactions.
+- **Transactions View** — Full search (title, notes, categories, payment methods) and multiple filters (type pills, category dropdown, start/end dates) with pagination and dynamic totals.
+- **Reports View** — Custom date range filters, total savings calculation, interactive category-wise spending progress bars (based on maximum expense), and monthly breakdown lists.
+- **Local Storage Sync** — Automatically preserves and loads transactions between refreshes.
+- **CSV Export** — Download your currently filtered transactions list with a single click.
+- **Design & UX** — Google Fonts (Inter), glassmorphism cards, micro-interactions, responsive sidebars, custom-drawn SVG icons, and a premium color palette.
+
+---
 
 ## 🚀 Getting Started
 
-No installation needed. Just clone and open:
+Follow these steps to run the application locally:
 
+### 1. Install Dependencies
+Run the following command in the root folder to install all required packages (including React and Lucide Icons):
 ```bash
-git clone https://github.com/YOUR_USERNAME/SpendWise.git
-cd SpendWise
-# Open index.html in your browser
+npm install
 ```
 
-Or simply double-click `index.html` to open in your browser.
+### 2. Start the Development Server
+Launch the Vite development server:
+```bash
+npm run dev
+```
+
+The app will start at [http://localhost:3000](http://localhost:3000) and open automatically in your browser.
+
+---
 
 ## 📁 Project Structure
 
 ```
 SpendWise/
-├── index.html    # Main HTML structure
-├── style.css     # All styles and responsive design
-├── script.js     # App logic (state, render, filters, export)
-└── README.md     # You are here
+├── src/
+│   ├── components/
+│   │   ├── Sidebar.jsx            # Left-panel navigations
+│   │   ├── Dashboard.jsx          # Statistics & Recent Items
+│   │   ├── Transactions.jsx       # Grid list, Search, Filters, CSV Export
+│   │   ├── Reports.jsx           # Charts & Month-on-month breakdown
+│   │   └── TransactionModal.jsx   # Create/Edit validated form dialog
+│   ├── App.jsx                    # Top-level state coordinator & sync
+│   ├── main.jsx                   # React bootloader script
+│   └── index.css                  # UI Design System & component styles
+├── index.html                     # HTML root template
+├── package.json                   # Configurations & Dependencies
+├── vite.config.js                 # Vite bundling setup
+└── README.md                      # Documentation
 ```
 
 ## 🛠 Tech Stack
 
-- **HTML5** — Semantic structure
-- **CSS3** — Custom properties, CSS Grid, Flexbox, responsive media queries
-- **Vanilla JavaScript** — No libraries or frameworks
-
-## 📱 Supported Categories
-
-Food, Transport, Shopping, Bills, Entertainment, Salary, Other
-
-## 💳 Supported Payment Methods
-
-Cash, Card, UPI, Online
-
----
-
-Made with ❤️ — Pure HTML/CSS/JS
+- **React 18** (Components, custom hooks, memoization)
+- **Vite** (Next-generation front-end tooling)
+- **Lucide React** (Vector iconography)
+- **Vanilla CSS3** (Custom design tokens, Flexbox/Grid, and responsive media query support)
