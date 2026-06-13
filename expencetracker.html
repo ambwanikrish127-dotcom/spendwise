@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SpendWise — Expense Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-logo">₹</span>
+      <span class="brand-name">SpendWise</span>
+    </div>
+    <nav class="nav">
+      <button class="nav-item active" data-view="dashboard"><span class="nav-icon">▦</span> Dashboard</button>
+      <button class="nav-item" data-view="transactions"><span class="nav-icon">⇄</span> Transactions</button>
+      <button class="nav-item" data-view="reports"><span class="nav-icon">▤</span> Reports</button>
+    </nav>
+    <div class="sidebar-foot">HTML · CSS · JavaScript</div>
+  </aside>
+
+  <main class="main">
+    <!-- DASHBOARD -->
+    <section class="view" id="view-dashboard">
+      <header class="page-head">
+        <h1>Dashboard</h1>
+        <button class="btn btn-primary" id="open-add-from-dash">+ Add transaction</button>
+      </header>
+      <div class="cards" id="dash-cards">
+        <div class="card card-income">
+          <p class="card-label">Total Income</p>
+          <h2 id="sum-income">₹0.00</h2>
+          <p class="card-sub" id="sum-income-count">0 transactions</p>
+        </div>
+        <div class="card card-expense">
+          <p class="card-label">Total Expense</p>
+          <h2 id="sum-expense">₹0.00</h2>
+          <p class="card-sub" id="sum-expense-count">0 transactions</p>
+        </div>
+        <div class="card card-balance">
+          <p class="card-label">Balance</p>
+          <h2 id="sum-balance">₹0.00</h2>
+          <p class="card-sub">Income − Expense</p>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Recent transactions</h3>
+        <div id="recent-list" class="recent-list"></div>
+      </div>
+    </section>
+
+    <!-- TRANSACTIONS -->
+    <section class="view hidden" id="view-transactions">
+      <header class="page-head">
+        <h1>Transaction List</h1>
+        <div class="head-actions">
+          <input type="text" id="search" class="search" placeholder="Search…" />
+          <button class="btn btn-ghost" id="export-btn">⬇ Export CSV</button>
+          <button class="btn btn-primary" id="open-add">+ Add transaction</button>
+        </div>
+      </header>
+
+      <!-- TYPE FILTER PILLS -->
+      <div class="type-filter">
+        <button class="type-pill active-all" id="pill-all"     onclick="setTypePill('all')">All</button>
+        <button class="type-pill"            id="pill-income"  onclick="setTypePill('income')">🟢 Income</button>
+        <button class="type-pill"            id="pill-expense" onclick="setTypePill('expense')">🔴 Expense</button>
+      </div>
+
+      <div class="panel">
+        <div class="toolbar">
+          <label>Category
+            <select id="filter-category">
+              <option value="All">All categories</option>
+              <option value="Food">Food</option>
+              <option value="Transport">Transport</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Bills">Bills</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Salary">Salary</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <div class="toolbar-divider"></div>
+          <label>From <input type="date" id="filter-date-from" /></label>
+          <label>To   <input type="date" id="filter-date-to"   /></label>
+          <button class="btn btn-ghost btn-sm" id="clear-filters-btn">✕ Clear filters</button>
+        </div>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Type</th><th>Title</th><th>Amount</th><th>Category</th>
+              <th>Payment</th><th>Notes</th><th>Date</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+        <div class="pagination" id="pagination"></div>
+        <div id="table-summary" style="margin-top:12px;font-size:13px;color:var(--muted);text-align:right;"></div>
+      </div>
+    </section>
+
+    <!-- REPORTS -->
+    <section class="view hidden" id="view-reports">
+      <header class="page-head"><h1>Reports</h1></header>
+
+      <!-- DATE RANGE ANALYSIS -->
+      <div class="panel">
+        <h3>Date Range Analysis</h3>
+        <div class="toolbar">
+          <label>From <input type="date" id="rpt-from" /></label>
+          <label>To   <input type="date" id="rpt-to"   /></label>
+          <button class="btn btn-primary btn-sm" onclick="renderReports()">Apply</button>
+          <button class="btn btn-ghost btn-sm" onclick="clearRptRange()">Show all</button>
+        </div>
+        <div class="range-summary" id="range-summary">
+          <div class="range-box"><div class="rb-label">Total Income</div><div class="rb-val amt-income" id="rpt-income">₹0</div></div>
+          <div class="range-box"><div class="rb-label">Total Expense</div><div class="rb-val amt-expense" id="rpt-expense">₹0</div></div>
+          <div class="range-box"><div class="rb-label">Savings (Income − Expense)</div><div class="rb-val" id="rpt-savings">₹0</div></div>
+        </div>
+      </div>
+
+      <!-- MONTHLY BREAKDOWN -->
+      <div class="panel">
+        <h3>Monthly Breakdown</h3>
+        <div id="monthly-table-wrap"></div>
+      </div>
+
+      <!-- SPENDING BY CATEGORY -->
+      <div class="panel">
+        <h3>Spending by Category</h3>
+        <div id="report-bars" class="report-bars"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ADD / EDIT MODAL -->
+<div class="modal-backdrop hidden" id="modal">
+  <div class="modal">
+    <h3 id="modal-title">Add transaction</h3>
+    <input type="hidden" id="edit-id" value="" />
+    <div class="form-grid">
+      <label>Type
+        <select id="f-type">
+          <option value="expense">Expense</option>
+          <option value="income">Income</option>
+        </select>
+      </label>
+      <label>Title <input type="text" id="f-title" placeholder="e.g. Groceries" /></label>
+      <label>Amount (₹) <input type="number" id="f-amount" placeholder="e.g. 500" min="0.01" step="0.01" /></label>
+      <label>Category
+        <select id="f-category">
+          <option value="Food">Food</option>
+          <option value="Transport">Transport</option>
+          <option value="Shopping">Shopping</option>
+          <option value="Bills">Bills</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="Salary">Salary</option>
+          <option value="Other">Other</option>
+        </select>
+      </label>
+      <label>Payment method
+        <select id="f-payment">
+          <option value="Cash">Cash</option>
+          <option value="Card">Card</option>
+          <option value="UPI">UPI</option>
+          <option value="Online">Online</option>
+        </select>
+      </label>
+      <label>Date <input type="date" id="f-date" /></label>
+      <label class="full">Notes
+        <textarea id="f-notes" placeholder="optional — add any details here"></textarea>
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="cancel-btn">Cancel</button>
+      <button class="btn btn-primary" id="save-btn">Save transaction</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
